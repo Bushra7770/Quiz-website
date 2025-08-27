@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Results</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+      background: #0d1117;
+      color: #fff;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: rgba(67, 97, 238, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(67,97,238,0.6), 0 0 12px rgba(67,97,238,0.3) inset;
+      max-width: 450px;
+      width: 100%;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    h1 {
+      font-size: 2.2em;
+      color: #60a5fa;
+      margin-bottom: 20px;
+      text-shadow: 0 0 8px #3b82f6, 0 0 16px rgba(67,97,238,0.7);
+    }
+
+    .score {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #22c55e;
+      margin: 20px 0;
+      animation: popUp 1s ease-in-out;
+    }
+
+    .feedback {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+      color: #f1f5f9;
+    }
+
+    .home-btn {
+      text-decoration: none;
+      display: inline-block;
+      padding: 12px 25px;
+      border-radius: 12px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #4895ef, #4361ee);
+      color: white;
+      transition: 0.3s ease;
+      box-shadow: 0 0 15px #4361ee;
+    }
+
+    .home-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #3b82f6, 0 0 40px rgba(67,97,238,0.7);
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(15px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes popUp {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>🎉 Quiz Completed!</h1>
+    <div class="score" id="score">0 / 10</div>
+    <div class="feedback" id="feedback">Your feedback will appear here.</div>
+    <a href="firstpage.html" class="home-btn">🏠 Go Home</a>
+  </div>
+
+  <script>
+    // Score ko localStorage se uthao (quiz script se set karna hoga)
+    let score = localStorage.getItem("quizScore") || 0;
+    let total = localStorage.getItem("quizTotal") || 10;
+
+    document.getElementById("score").textContent = score + " / " + total;
+
+    let percentage = (score / total) * 100;
+    let feedback = "";
+
+    if (percentage >= 80) {
+      feedback = "🌟 Excellent! You are a genius!";
+    } else if (percentage >= 50) {
+      feedback = "👍 Good Job! Keep practicing.";
+    } else {
+      feedback = "📘 Don’t worry, try again!";
+    }
+
+    document.getElementById("feedback").textContent = feedback;
+  </script>
+
+</body>
+</html>

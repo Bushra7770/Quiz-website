@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuizMaster - Professional Interactive Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* -------------------- General -------------------- */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#0a0f30;color:#fff;scroll-behavior:smooth;overflow-x:hidden;transition:background 0.5s,color 0.5s;}
+a{text-decoration:none;color:inherit;}
+
+/* -------------------- Navbar -------------------- */
+nav{
+  width:100%;position:sticky;top:0;z-index:1000;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:15px 50px;background:rgba(10,15,48,0.85);
+  backdrop-filter:blur(15px);box-shadow:0 5px 25px rgba(0,0,50,0.7);
+}
+nav .logo{
+  font-size:2em;font-weight:900;color:#00bfff;
+  background: linear-gradient(45deg,#1e3c72,#2a5298);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:textGlow 2s infinite alternate;
+}
+@keyframes textGlow{
+  0%{text-shadow:0 0 5px #00bfff,0 0 10px #1e3c72;}
+  100%{text-shadow:0 0 25px #2a5298,0 0 40px #00bfff;}
+}
+nav ul{list-style:none;display:flex;gap:35px;}
+nav ul li a{position:relative;font-weight:600;transition:0.3s;}
+nav ul li a::after{content:'';width:0;height:2px;background:#00bfff;display:block;margin:auto;transition:0.3s;}
+nav ul li a:hover::after{width:100%;}
+nav .login-btn{
+  background:linear-gradient(135deg,#2a5298,#1e3c72);
+  color:#fff;padding:10px 25px;border-radius:50px;font-weight:700;
+  transition:0.3s;box-shadow:0 0 15px #00bfff;
+}
+nav .login-btn:hover{transform:scale(1.1);box-shadow:0 0 30px #00bfff;}
+
+/* -------------------- Hero Section -------------------- */
+.hero{
+  position:relative;height:95vh;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  background:linear-gradient(rgba(0,0,40,0.7),rgba(0,0,60,0.7)),
+  url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
+  overflow:hidden;
+}
+.hero h1{
+  font-size:4em;margin-bottom:25px;
+  background: linear-gradient(90deg,#00bfff,#2a5298,#00bfff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:textSlide 3s linear infinite;
+}
+@keyframes textSlide{
+  0%{background-position:0 0;}
+  100%{background-position:200% 0;}
+}
+.hero p{
+  font-size:1.4em;max-width:750px;line-height:1.6;margin-bottom:40px;color:#ccc;
+  animation:fadeInUp 2s ease forwards;
+}
+.hero a{
+  display:inline-block;padding:18px 40px;font-size:1.2em;font-weight:700;border-radius:50px;
+  background:linear-gradient(135deg,#1e3c72,#00bfff);
+  color:#fff;box-shadow:0 10px 35px rgba(0,191,255,0.5);transition:0.3s;
+}
+.hero a:hover{transform:scale(1.1);box-shadow:0 15px 45px rgba(0,191,255,0.8);}
+
+/* -------------------- Subjects Section -------------------- */
+ .subjects {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 60px 0;
+  }
+
+  .choose-btn {
+    padding: 16px 36px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg,#4895ef,#4361ee);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all .3s ease;
+    box-shadow: 0 0 15px rgba(67,97,238,0.6);
+    backdrop-filter: blur(6px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Glowing border animation */
+  .choose-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    padding: 2px;
+    background: linear-gradient(45deg, #00f5ff, #4895ef, #4361ee, #00f5ff);
+    background-size: 300% 300%;
+    animation: glowingBorder 6s linear infinite;
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude; 
+  }
+
+  @keyframes glowingBorder {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .choose-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 0 25px rgba(67,97,238,0.9);
+  }
+
+  .choose-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 0 10px rgba(67,97,238,0.7);
+  }
+
+/* -------------------- Stats Section -------------------- */
+.stats{
+  background:#0a0f30;padding:100px 20px;text-align:center;display:flex;justify-content:center;gap:50px;flex-wrap:wrap;
+}
+.stat-card{
+  background:linear-gradient(145deg,#1e3c72,#00bfff);
+  padding:40px 50px;border-radius:25px;box-shadow:0 15px 50px rgba(0,191,255,0.5);
+  text-align:center;flex:1;min-width:200px;transition:0.3s;
+}
+.stat-card:hover{transform:scale(1.05);box-shadow:0 25px 70px rgba(0,191,255,0.8);}
+.stat-card h3{font-size:3em;margin-bottom:15px;}
+.stat-card p{font-size:1.2em;color:#fff;}
+
+/* -------------------- Leaderboard Section -------------------- */
+.leaderboard{
+  background:#0d163f;padding:100px 20px;text-align:center;
+}
+.leaderboard h2{color:#00bfff;margin-bottom:50px;font-size:3em;text-shadow:0 0 25px #00bfff;}
+.leaderboard table{
+  width:100%;max-width:900px;margin:0 auto;border-collapse:collapse;color:#fff;
+}
+.leaderboard th, .leaderboard td{
+  padding:15px 20px;border-bottom:1px solid #00bfff;text-align:center;
+}
+.leaderboard tr:hover{background:rgba(0,191,255,0.1);transform:scale(1.01);transition:0.3s;}
+
+/* -------------------- Testimonials Section -------------------- */
+.testimonials{
+  background:#0a0f30;padding:100px 20px;text-align:center;overflow:hidden;
+}
+.testimonials h2{color:#00bfff;margin-bottom:50px;font-size:3em;text-shadow:0 0 25px #00bfff;}
+.testimonial-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:30px;}
+.testimonial-card{
+  background:#112255;padding:30px;border-radius:25px;box-shadow:0 15px 50px rgba(0,191,255,0.3);
+  max-width:300px;transition:0.3s;
+}
+.testimonial-card:hover{transform:scale(1.05);box-shadow:0 25px 60px rgba(0,191,255,0.6);}
+.testimonial-card p{font-size:1em;color:#ccc;margin-bottom:15px;}
+.testimonial-card h4{color:#00bfff;font-weight:700;}
+
+/* -------------------- About Section -------------------- */
+.section{padding:100px 20px;text-align:center;}
+.section h2{color:#00bfff;margin-bottom:50px;font-size:3em;}
+.section p{max-width:800px;margin:0 auto;font-size:1.2em;line-height:1.9;color:#ccc;}
+
+/* -------------------- Contact Form -------------------- */
+.contact form{max-width:650px;margin:0 auto;display:flex;flex-direction:column;gap:18px;}
+.contact form input,.contact form textarea{padding:18px 22px;border-radius:15px;border:none;outline:none;font-size:1.1em;background:#112255;color:#fff;}
+.contact form button{
+  background:linear-gradient(135deg,#1e3c72,#00bfff);color:#fff;padding:18px;font-weight:700;border:none;border-radius:50px;cursor:pointer;transition:0.3s;
+}
+.contact form button:hover{transform:scale(1.05);box-shadow:0 15px 45px rgba(0,191,255,0.6);}
+
+/* -------------------- Footer -------------------- */
+footer{background:#0d163f;color:#fff;text-align:center;padding:30px;font-size:1em;}
+
+/* -------------------- Back to Top -------------------- */
+#topBtn{
+  position:fixed;bottom:40px;right:40px;padding:18px 22px;border:none;border-radius:50%;background:#00bfff;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 10px 30px rgba(0,191,255,0.5);display:none;z-index:100;
+}
+#topBtn:hover{transform:scale(1.1);box-shadow:0 15px 45px rgba(0,191,255,0.7);}
+
+/* -------------------- Modal -------------------- */
+.modal{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+  background:rgba(10,15,50,0.95);backdrop-filter:blur(15px);
+  padding:35px;border-radius:25px;z-index:2000;width:80%;max-width:550px;
+  box-shadow:0 20px 60px rgba(0,191,255,0.7);transition:0.3s;
+}
+.modal.show{transform:translate(-50%,-50%) scale(1);}
+.modal h3{color:#00bfff;margin-bottom:20px;}
+.modal button{background:#00bfff;color:#fff;padding:12px 25px;border:none;border-radius:50px;cursor:pointer;margin-top:25px;transition:0.3s;}
+.modal button:hover{box-shadow:0 15px 50px #00bfff;transform:scale(1.05);}
+
+/* -------------------- Particles -------------------- */
+canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">QuizMaster</div>
+  <ul>
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#subjects">Subjects</a></li>
+    <li><a href="#stats">Stats</a></li>
+    <li><a href="#leaderboard">Leaderboard</a></li>
+    <li><a href="#testimonials">Testimonials</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="login.html" class="login-btn">Login</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <canvas class="particles"></canvas>
+  <h1>Welcome to QuizMaster</h1>
+  <p id="typingText"></p>
+  <a href="#subjects">Start Quiz</a>
+</section>
+
+<!-- Subjects -->
+<section class="subjects" id="subjects">
+  <button onclick="window.location.href='subject.html'" class="choose-btn">
+    Choose a Subject
+  </button>
+</section>
+<!-- Stats -->
+<section class="stats" id="stats">
+  <div class="stat-card"><h3>1200+</h3><p>Quizzes Taken</p></div>
+  <div class="stat-card"><h3>500+</h3><p>Active Students</p></div>
+  <div class="stat-card"><h3>95%</h3><p>Average Score</p></div>
+</section>
+
+<!-- Leaderboard -->
+<section class="leaderboard" id="leaderboard">
+  <h2>Top Performers</h2>
+  <table>
+    <tr><th>Rank</th><th>Name</th><th>Score</th></tr>
+    <tr><td>1</td><td>Ali</td><td>98%</td></tr>
+    <tr><td>2</td><td>Bushra</td><td>96%</td></tr>
+    <tr><td>3</td><td>Faiza</td><td>95%</td></tr>
+    <tr><td>4</td><td>Ahmed</td><td>94%</td></tr>
+  </table>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials" id="testimonials">
+  <h2>What Students Say</h2>
+  <div class="testimonial-cards">
+    <div class="testimonial-card"><p>This platform boosted my learning in a fun way!</p><h4>– Sara</h4></div>
+    <div class="testimonial-card"><p>Interactive quizzes made studying engaging and rewarding.</p><h4>– Hamza</h4></div>
+    <div class="testimonial-card"><p>Love the UI and real-time feedback for every quiz.</p><h4>– Ayesha</h4></div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="section about" id="about">
+  <h2>About QuizMaster</h2>
+  <p>QuizMaster is a professional online quiz platform designed for students to learn interactively. Track your progress, challenge friends, and improve knowledge efficiently with instant feedback and analytics.</p>
+</section>
+
+<!-- Contact -->
+<section class="section contact" id="contact">
+  <h2>Contact Us</h2>
+  <p>Have questions or suggestions? Drop us a message!</p>
+  <form>
+    <input type="text" placeholder="Your Name" required>
+    <input type="email" placeholder="Your Email" required>
+    <textarea placeholder="Your Message" rows="5" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+
+<!-- Footer -->
+<footer>
+  &copy; 2025 QuizMaster. All Rights Reserved.
+</footer>
+
+<!-- Modal -->
+<div class="modal" id="infoModal">
+  <h3>QuizMaster Info</h3>
+  <p>This platform provides interactive quizzes for various subjects. Challenge yourself and track your score instantly!</p>
+  <button onclick="closeModal()">Close</button>
+</div>
+
+<!-- Back to Top -->
+<button id="topBtn" onclick="topFunction()">↑</button>
+
+<script>
+// Typing effect
+const text = "Boost your learning with interactive quizzes. Challenge yourself, improve your knowledge, and track your progress!";
+let index=0;
+function typeText(){
+  if(index<text.length){
+    document.getElementById('typingText').innerHTML += text[index];
+    index++;
+    setTimeout(typeText,25);
+  }
+}
+typeText();
+
+// Scroll animation
+const sections=document.querySelectorAll('.section,.subjects,.hero,.stats,.leaderboard,.testimonials');
+window.addEventListener('scroll',()=>{
+  sections.forEach(section=>{
+    const top=section.getBoundingClientRect().top;
+    const height=window.innerHeight/1.2;
+    if(top<height) section.classList.add('show');
+  });
+});
+
+// Modal
+function openModal(){document.getElementById('infoModal').classList.add('show');}
+function closeModal(){document.getElementById('infoModal').classList.remove('show');}
+
+// Back to Top
+const topBtn=document.getElementById("topBtn");
+window.onscroll=function(){
+  if(document.body.scrollTop>300||document.documentElement.scrollTop>300) topBtn.style.display="block";
+  else topBtn.style.display="none";
+};
+function topFunction(){window.scrollTo({top:0,behavior:'smooth'});}
+
+// Particle network
+const canvas=document.querySelector('.particles');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+const particlesArray=[];
+class Particle{
+  constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=Math.random()*2+1;this.speedX=Math.random()*1-0.5;this.speedY=Math.random()*1-0.5;}
+  update(){this.x+=this.speedX;this.y+=this.speedY;if(this.x>canvas.width)this.x=0;if(this.x<0)this.x=canvas.width;if(this.y>canvas.height)this.y=0;if(this.y<0)this.y=canvas.height;}
+  draw(){ctx.fillStyle="#00bfff";ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fill();}
+}
+function initParticles(){for(let i=0;i<120;i++){particlesArray.push(new Particle());}}
+function animateParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particlesArray.forEach(p=>{p.update();p.draw();});
+  // draw lines
+  for(let a=0;a<particlesArray.length;a++){
+    for(let b=a;b<particlesArray.length;b++){
+      let dx=particlesArray[a].x-particlesArray[b].x;
+      let dy=particlesArray[a].y-particlesArray[b].y;
+      let distance=Math.sqrt(dx*dx+dy*dy);
+      if(distance<120){
+        ctx.strokeStyle='rgba(0,191,255,'+(1-distance/120)+')';
+        ctx.lineWidth=1;
+        ctx.beginPath();
+        ctx.moveTo(particlesArray[a].x,particlesArray[a].y);
+        ctx.lineTo(particlesArray[b].x,particlesArray[b].y);
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(animateParticles);
+}
+initParticles();
+animateParticles();
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+</script>
+
+</body>
+</html>

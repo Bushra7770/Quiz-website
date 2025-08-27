@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz</title>
+  <style>
+/* Body & background animation */
+
+body {
+
+  font-family: 'Poppins', sans-serif;
+  background: #0d1117;
+  color: #fff;
+  text-align: center;
+  padding: 40px;
+  overflow-x: hidden;
+}
+
+/* Title Styling */
+h2#subjectTitle {
+  color: #60a5fa;
+  font-size: 2.5em;
+  text-shadow: 0 0 8px #3b82f6, 0 0 16px rgba(67,97,238,0.7), 0 0 24px rgba(67,97,238,0.5);
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+/* Question Box */
+.question-box {
+  background: rgba(67, 97, 238, 0.15);
+  box-shadow: 0 8px 20px rgba(67,97,238,0.4), 0 0 10px rgba(67,97,238,0.3) inset;
+  padding: 25px 20px;
+  margin: 20px auto;
+  border-radius: 15px;
+  max-width: 600px;
+  transition: all 0.3s ease;
+}
+
+.question-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(72,149,239,0.7), 0 0 20px rgba(67,97,238,0.5) inset;
+}
+
+/* Question Text */
+.question-box h3 {
+  margin-bottom: 20px;
+  font-size: 1.3em;
+  color: #4895ef;
+}
+
+/* Buttons Styling */
+button {
+  padding: 12px 25px;
+  margin: 10px;
+  border: 2px solid #3b82f6;
+  border-radius: 12px;
+  cursor: pointer;
+  background: transparent;
+  color: #3b82f6;
+  font-weight: bold;
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #4895ef, #4361ee);
+  color: #fff;
+  box-shadow: 0 0 15px #4361ee, 0 0 25px rgba(72,149,239,0.7);
+  transform: scale(1.05);
+}
+
+/* Correct and Wrong Answer */
+button.correct {
+  background: #4ade80;
+  color: #000;
+  box-shadow: 0 0 20px #22c55e, 0 0 30px rgba(34,197,94,0.7);
+}
+
+button.wrong {
+  background: #ef4444;
+  color: #fff;
+  box-shadow: 0 0 20px #dc2626, 0 0 30px rgba(220,38,38,0.7);
+}
+
+/* Result Styling */
+#result {
+  margin-top: 30px;
+  font-size: 1.5em;
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(67,97,238,0.15);
+  box-shadow: 0 0 25px rgba(72,149,239,0.6), 0 0 12px rgba(67,97,238,0.3) inset;
+  color: #60a5fa;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Small responsive tweak */
+@media (max-width: 650px) {
+  .question-box {
+    padding: 20px 15px;
+  }
+  button {
+    padding: 10px 18px;
+    font-size: 0.95em;
+  }
+}
+
+
+</style>
+
+</head>
+<body>
+
+<h2 id="subjectTitle">Your Quiz</h2>
+<div id="quizContainer"></div>
+
+  <script>
+    // Step 1: Get subject from localStorage
+    let subject = localStorage.getItem("subject") || "General";
+    document.getElementById("subjectTitle").innerText = subject + " Quiz";
+
+    // Step 2: Questions Bank (10 each subject)
+    // questions.js
+
+const questions = {
+  "Mathematics": [
+    { q: "2 + 2 = ?", options: ["3", "4", "5", "6"], answer: "4" },
+    { q: "Square root of 81?", options: ["7", "8", "9", "10"], answer: "9" },
+    { q: "Value of π (approx)?", options: ["2.14", "3.14", "4.13", "3.41"], answer: "3.14" },
+    { q: "Derivative of x²?", options: ["x", "2x", "x²", "1"], answer: "2x" },
+    { q: "10 × 12 = ?", options: ["100", "110", "120", "130"], answer: "120" },
+    { q: "Area of circle formula?", options: ["πr²", "2πr", "πd", "r²"], answer: "πr²" },
+    { q: "Log(1) base 10 = ?", options: ["0", "1", "10", "∞"], answer: "0" },
+    { q: "100 ÷ 25 = ?", options: ["2", "3", "4", "5"], answer: "4" },
+    { q: "Simplify: (3+2)²?", options: ["10", "25", "15", "20"], answer: "25" },
+    { q: "sin(90°) = ?", options: ["0", "1", "-1", "undefined"], answer: "1" }
+  ],
+
+  "Physics": [
+    { q: "Speed of light?", options: ["3×10^8 m/s", "300 km/h", "1×10^5 m/s", "3×10^6 m/s"], answer: "3×10^8 m/s" },
+    { q: "Who discovered gravity?", options: ["Newton", "Einstein", "Tesla", "Bohr"], answer: "Newton" },
+    { q: "Unit of Force?", options: ["Joule", "Newton", "Watt", "Pascal"], answer: "Newton" },
+    { q: "1 Horsepower = ?", options: ["746 Watts", "100 Watts", "1000 Watts", "500 Watts"], answer: "746 Watts" },
+    { q: "Boiling point of water (°C)?", options: ["50", "100", "150", "200"], answer: "100" },
+    { q: "Current unit?", options: ["Volt", "Ampere", "Ohm", "Coulomb"], answer: "Ampere" },
+    { q: "Work formula?", options: ["Force × Distance", "Mass × Velocity", "Power × Time", "Energy ÷ Time"], answer: "Force × Distance" },
+    { q: "Acceleration due to gravity (m/s²)?", options: ["8.8", "9.8", "10.8", "11.8"], answer: "9.8" },
+    { q: "Which particle has no charge?", options: ["Proton", "Electron", "Neutron", "Ion"], answer: "Neutron" },
+    { q: "SI unit of Power?", options: ["Newton", "Joule", "Watt", "Pascal"], answer: "Watt" }
+  ],
+
+  "Chemistry": [
+    { q: "H2O is?", options: ["Hydrogen", "Oxygen", "Water", "Acid"], answer: "Water" },
+    { q: "Atomic number of Carbon?", options: ["6", "12", "8", "14"], answer: "6" },
+    { q: "pH of neutral solution?", options: ["0", "7", "14", "10"], answer: "7" },
+    { q: "Formula of common salt?", options: ["NaCl", "KCl", "NaOH", "CaCl2"], answer: "NaCl" },
+    { q: "Gas in soft drinks?", options: ["O2", "CO2", "H2", "N2"], answer: "CO2" },
+    { q: "Who discovered Oxygen?", options: ["Priestley", "Newton", "Dalton", "Bohr"], answer: "Priestley" },
+    { q: "HCl is?", options: ["Acid", "Base", "Salt", "Gas"], answer: "Acid" },
+    { q: "Chemical symbol of Gold?", options: ["Ag", "Au", "Gd", "Go"], answer: "Au" },
+    { q: "CH4 is?", options: ["Ethane", "Propane", "Methane", "Butane"], answer: "Methane" },
+    { q: "Most abundant gas in air?", options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Argon"], answer: "Nitrogen" }
+  ],
+
+  "Biology": [
+    { q: "Basic unit of life?", options: ["Tissue", "Cell", "Organ", "DNA"], answer: "Cell" },
+    { q: "Human heart has how many chambers?", options: ["2", "3", "4", "5"], answer: "4" },
+    { q: "Blood cells that fight infection?", options: ["RBC", "WBC", "Platelets", "Plasma"], answer: "WBC" },
+    { q: "Largest organ in human body?", options: ["Heart", "Skin", "Liver", "Brain"], answer: "Skin" },
+    { q: "DNA full form?", options: ["Deoxyribo Nucleic Acid", "Dynamic Nucleic Acid", "Double Nucleic Acid", "None"], answer: "Deoxyribo Nucleic Acid" },
+    { q: "Plant food making process?", options: ["Respiration", "Photosynthesis", "Digestion", "Transpiration"], answer: "Photosynthesis" },
+    { q: "Human backbone is made of?", options: ["Ribs", "Vertebrae", "Cartilage", "Ligaments"], answer: "Vertebrae" },
+    { q: "Blood clotting factor?", options: ["Platelets", "Plasma", "WBC", "Hemoglobin"], answer: "Platelets" },
+    { q: "Which organ purifies blood?", options: ["Lungs", "Kidney", "Heart", "Liver"], answer: "Kidney" },
+    { q: "Virus causing AIDS?", options: ["HIV", "HBV", "HCV", "HSV"], answer: "HIV" }
+  ],
+
+"Computer Science": [
+    { q: "CPU stands for?", options: ["Central Processing Unit","Central Programming Unit","Computer Power Unit","Control Processing Unit"], answer: "Central Processing Unit" },
+    { q: "HTML is a ?", options: ["Programming language","Markup language","Database","Protocol"], answer: "Markup language" },
+    { q: "What is RAM?", options: ["Permanent storage","Volatile memory","Processor","Input device"], answer: "Volatile memory" },
+    { q: "Binary of decimal 5 is?", options: ["101","110","111","100"], answer: "101" },
+    { q: "Which is a search engine?", options: ["Chrome","Google","Windows","Linux"], answer: "Google" },
+    { q: "Which language is mostly used for web scripting?", options: ["C","Java","JavaScript","Assembly"], answer: "JavaScript" },
+    { q: "Which is NOT an OS?", options: ["Windows","Linux","Oracle","macOS"], answer: "Oracle" },
+    { q: "IP stands for?", options: ["Internet Protocol","Internal Process","Input Protocol","Interface Protocol"], answer: "Internet Protocol" },
+    { q: "Which is database?", options: ["MySQL","HTML","CSS","JS"], answer: "MySQL" },
+    { q: "Which device routes traffic between networks?", options: ["Switch","Hub","Router","Printer"], answer: "Router" }
+  ],
+
+  "Calculus": [
+    { q: "Derivative of cos x is?", options: ["sin x","-sin x","-cos x","cos x"], answer: "-sin x" },
+    { q: "Integral of 0 dx is?", options: ["0","C","1","x"], answer: "C" },
+    { q: "d/dx (e^x) = ?", options: ["e^x","x e^x","1","0"], answer: "e^x" },
+    { q: "Limit of (sin x)/x as x→0 is?", options: ["0","1","∞","-1"], answer: "1" },
+    { q: "If f'(x)=0 then f is?", options: ["Increasing","Decreasing","Constant","Undefined"], answer: "Constant" },
+    { q: "Area under curve is computed by?", options: ["Derivative","Integral","Limit","Sum"], answer: "Integral" },
+    { q: "Fundamental theorem links?", options: ["Algebra & Geometry","Derivative & Integral","Matrix & Vector","Series & Sequences"], answer: "Derivative & Integral" },
+    { q: "d/dx (ln x) = ?", options: ["1/x","x","ln x","e^x"], answer: "1/x" },
+    { q: "Antiderivative of 2x is?", options: ["x^2","x^2 + C","2x + C","x + C"], answer: "x^2 + C" },
+    { q: "Slope of tangent equals?", options: ["Derivative","Integral","Average rate","Area"], answer: "Derivative" }
+  ],
+
+  "Statistics": [
+    { q: "Mean of {2,3,5} is?", options: ["3","10","10/3","None"], answer: "10/3" },
+    { q: "Median of {1,3,5,7} is?", options: ["3","4","5","6"], answer: "4" },
+    { q: "Mode is value that is?", options: ["Average","Most frequent","Least frequent","Middle"], answer: "Most frequent" },
+    { q: "Standard deviation measures?", options: ["Center","Spread","Skewness","Kurtosis"], answer: "Spread" },
+    { q: "Probability ranges between?", options: ["0 to 1","-1 to 1","0 to ∞","-∞ to ∞"], answer: "0 to 1" },
+    { q: "If events A and B independent then P(A∩B) = ?", options: ["P(A)+P(B)","P(A)P(B)","P(A)-P(B)","0"], answer: "P(A)P(B)" },
+    { q: "Variance is square of?", options: ["Mean","Mode","Std deviation","Range"], answer: "Std deviation" },
+    { q: "Which is measure of center?", options: ["Mean","Std dev","Variance","Range"], answer: "Mean" },
+    { q: "A sample is subset of?", options: ["Population","Parameter","Statistic","Mean"], answer: "Population" },
+    { q: "Which is not measure of dispersion?", options: ["Range","IQR","Median","Std dev"], answer: "Median" }
+  ],
+
+  "Economics": [
+    { q: "Law of demand: price ↑ then quantity demanded ?", options: ["Increases","Decreases","No change","Random"], answer: "Decreases" },
+    { q: "GDP measures?", options: ["Population","Total output","Inflation","Unemployment"], answer: "Total output" },
+    { q: "Opportunity cost is ?", options: ["Money spent","Next best alternative foregone","Profit","Loss"], answer: "Next best alternative foregone" },
+    { q: "Inflation means ?", options: ["Prices fall","Prices rise","GDP rise","Unemployment fall"], answer: "Prices rise" },
+    { q: "Microeconomics studies ?", options: ["Individual units","Whole economy","Government policy","International trade"], answer: "Individual units" },
+    { q: "Monopoly means ?", options: ["Many sellers","One seller","Free entry","Perfect competition"], answer: "One seller" },
+    { q: "Demand curve slopes ?", options: ["Upwards","Downwards","Vertical","Horizontal"], answer: "Downwards" },
+    { q: "Price elasticity measures ?", options: ["Responsiveness of quantity to price","Supply shift","Demand shift","Income change"], answer: "Responsiveness of quantity to price" },
+    { q: "A substitute good means ?", options: ["Complement","Alternative","Inferior","Normal"], answer: "Alternative" },
+    { q: "Fiscal policy is by ?", options: ["Central bank","Government","Consumers","Firms"], answer: "Government" }
+  ],
+
+  "Business Studies": [
+    { q: "A sole proprietorship has ?", options: ["Many owners","Single owner","No owner","Government owned"], answer: "Single owner" },
+    { q: "Marketing involves ?", options: ["Production only","Promotion only","Creating, communicating and delivering value","Accounting only"], answer: "Creating, communicating and delivering value" },
+    { q: "Balance sheet shows ?", options: ["Profit only","Assets and liabilities","Cash flow","Sales"], answer: "Assets and liabilities" },
+    { q: "Inventory is a type of ?", options: ["Asset","Liability","Expense","Revenue"], answer: "Asset" },
+    { q: "Human resource deals with ?", options: ["Machines","Employees","Finance","Sales"], answer: "Employees" },
+    { q: "Break-even means ?", options: ["Loss","Profit","No profit no loss","Huge profit"], answer: "No profit no loss" },
+    { q: "A mission statement describes ?", options: ["Vision","Daily sales","Company purpose","Stock price"], answer: "Company purpose" },
+    { q: "Franchising is ?", options: ["One brand license to others","Merger","Bank loan","Hiring"], answer: "One brand license to others" },
+    { q: "Depreciation relates to ?", options: ["Asset value decline","Salary","Revenue","Tax"], answer: "Asset value decline" },
+    { q: "Working capital = ?", options: ["Assets - Liabilities","Current assets - current liabilities","Profit - Loss","Revenue - Cost"], answer: "Current assets - current liabilities" }
+  ],
+
+  "Physics Advanced": [
+    { q: "Relativity theory by ?", options: ["Newton","Einstein","Maxwell","Planck"], answer: "Einstein" },
+    { q: "Photoelectric effect supports particle nature of ?", options: ["Electrons","Photons","Protons","Neutrons"], answer: "Light (photons)" },
+    { q: "Planck constant (h) unit is ?", options: ["J·s","J/s","s","J"], answer: "J·s" },
+    { q: "Schrodinger equation belongs to ?", options: ["Classical mechanics","Quantum mechanics","Thermodynamics","Optics"], answer: "Quantum mechanics" },
+    { q: "de Broglie associated wavelength to ?", options: ["Photon only","Particle-wave duality","Only waves","None"], answer: "Particle-wave duality" },
+    { q: "Uncertainty principle by ?", options: ["Heisenberg","Bohr","Dirac","Pauli"], answer: "Heisenberg" },
+    { q: "Which is a fermion?", options: ["Photon","Electron","Gluon","Photon"], answer: "Electron" },
+    { q: "Spin of photon is ?", options: ["0","1/2","1","2"], answer: "1" },
+    { q: "Quantum number n denotes ?", options: ["Spin","Principal energy level","Angular momentum","Magnetic"], answer: "Principal energy level" },
+    { q: "Time dilation increases with ?", options: ["Speed","Mass","Charge","Temperature"], answer: "Speed" }
+  ],
+
+  "Chemistry Advanced": [
+    { q: "Hybridization of carbon in methane (CH4)?", options: ["sp","sp2","sp3","dsp2"], answer: "sp3" },
+    { q: "Electronegativity trend increases towards ?", options: ["Left","Right and up","Down","Center"], answer: "Right and up" },
+    { q: "pKa measures ?", options: ["Acid strength","Base strength","Molecular weight","Boiling point"], answer: "Acid strength" },
+    { q: "Which is an oxidizing agent?", options: ["H2","O2","Na","Mg"], answer: "O2" },
+    { q: "Stoichiometry relates to ?", options: ["Shapes","Amounts of reactants","Colors","Pressure"], answer: "Amounts of reactants" },
+    { q: "Transition metals are in which block?", options: ["s-block","p-block","d-block","f-block"], answer: "d-block" },
+    { q: "Covalent bond formed by ?", options: ["Electron transfer","Electron sharing","Proton exchange","Neutron sharing"], answer: "Electron sharing" },
+    { q: "Which is amphoteric?", options: ["HCl","NaOH","Aluminium oxide (Al2O3)","He"], answer: "Aluminium oxide (Al2O3)" },
+    { q: "Enthalpy symbol?", options: ["S","H","G","E"], answer: "H" },
+    { q: "Catalyst affects ?", options: ["Equilibrium composition","Reaction rate","Temperature","Pressure"], answer: "Reaction rate" }
+  ],
+
+  "Biology Advanced": [
+    { q: "Central dogma describes flow of genetic info from ?", options: ["Protein→DNA","DNA→RNA→Protein","RNA→DNA","Protein→RNA"], answer: "DNA→RNA→Protein" },
+    { q: "Mitosis produces ?", options: ["4 haploid cells","2 diploid cells","2 haploid cells","1 cell"], answer: "2 diploid cells" },
+    { q: "RNA that carries amino acids is ?", options: ["mRNA","tRNA","rRNA","snRNA"], answer: "tRNA" },
+    { q: "Site of aerobic respiration?", options: ["Chloroplast","Mitochondria","Nucleus","Ribosome"], answer: "Mitochondria" },
+    { q: "Antigen triggers ?", options: ["Antibody production","Enzyme activity","Photosynthesis","Respiration"], answer: "Antibody production" },
+    { q: "PCR amplifies ?", options: ["Proteins","DNA","Lipids","Carbohydrates"], answer: "DNA" },
+    { q: "Operon model belongs to?", options: ["Prokaryotes","Eukaryotes","Plants","Fungi"], answer: "Prokaryotes" },
+    { q: "Which is a lipid?", options: ["Glucose","Triglyceride","Amino acid","Nucleotide"], answer: "Triglyceride" },
+    { q: "Homeostasis means ?", options: ["Change","Stable internal environment","Growth only","Reproduction"], answer: "Stable internal environment" },
+    { q: "Which cell organelle makes proteins?", options: ["Ribosome","Golgi","Lysosome","Peroxisome"], answer: "Ribosome" }
+  ],
+  
+   "English Literature": [
+    { q: "Who wrote 'Romeo and Juliet'?", options: ["Shakespeare","Dickens","Austen","Orwell"], answer: "Shakespeare" },
+    { q: "Poem with 14 lines is called?", options: ["Haiku","Sonnet","Limerick","Epic"], answer: "Sonnet" },
+    { q: "Protagonist is the ?", options: ["Hero","Villain","Narrator","Editor"], answer: "Hero" },
+    { q: "Narrative told by 'I' is ?", options: ["Third person","Second person","First person","Omniscient"], answer: "First person" },
+    { q: "Theme of a story means ?", options: ["Plot only","Underlying message","Characters names","Setting"], answer: "Underlying message" },
+    { q: "Antagonist opposes ?", options: ["Protagonist","Narrator","Theme","Setting"], answer: "Protagonist" },
+    { q: "Which is dramatic form?", options: ["Novel","Play","Essay","Article"], answer: "Play" },
+    { q: "Metaphor compares using ?", options: ["Like/as","Directly without like/as","Neither","Both"], answer: "Directly without like/as" },
+    { q: "Alliteration is repetition of ?", options: ["Vowels","Consonants at start","Words length","Punctuation"], answer: "Consonants at start" },
+    { q: "Genre of '1984' is?", options: ["Romance","Dystopian","Comedy","Historical"], answer: "Dystopian" }
+  ],
+
+"Sociology": [
+    { q: "Study of society is called ?", options: ["Psychology","Sociology","Biology","Economics"], answer: "Sociology" },
+    { q: "Norms are ?", options: ["Laws only","Social rules","Weather patterns","Economic units"], answer: "Social rules" },
+    { q: "Primary socialization done by ?", options: ["School","Peers","Family","Government"], answer: "Family" },
+    { q: "Role conflict means ?", options: ["Two roles incompatible","Role same","No role","Role complete"], answer: "Two roles incompatible" },
+    { q: "Social institution example ?", options: ["Family","Car","Tree","Book"], answer: "Family" },
+    { q: "Urbanization is increase in ?", options: ["Rural area","Cities population","Forests","Animals"], answer: "Cities population" },
+    { q: "Culture includes ?", options: ["Values, norms, symbols","Only laws","Only language","Only food"], answer: "Values, norms, symbols" },
+    { q: "Structural functionalism focuses on ?", options: ["Conflict","Functions of society","Individuals only","Technology"], answer: "Functions of society" },
+    { q: "Which is qualitative method?", options: ["Survey","Interview","Stats","Regression"], answer: "Interview" },
+    { q: "Deviance means ?", options: ["Conformity","Breaking norms","Following rules","Obedience"], answer: "Breaking norms" }
+  ],
+
+  
+   "Data Structures": [
+    { q: "Which structure uses LIFO?", options: ["Queue","Stack","Tree","Graph"], answer: "Stack" },
+    { q: "Binary tree node has max how many children?", options: ["1","2","3","4"], answer: "2" },
+    { q: "Which is O(1) access?", options: ["Array index","Linked list search","Binary search","Linear search"], answer: "Array index" },
+    { q: "Hash table resolves collisions by?", options: ["Sorting","Hashing techniques like chaining","Multiplying","Subtracting"], answer: "Hashing techniques like chaining" },
+    { q: "Which is not linear DS?", options: ["Queue","Stack","Graph","Array"], answer: "Graph" },
+    { q: "Linked list node stores?", options: ["Data only","Pointer only","Data and pointer","None"], answer: "Data and pointer" },
+    { q: "Heap is used to implement ?", options: ["Queue","Stack","Priority queue","Graph"], answer: "Priority queue" },
+    { q: "Which traversal is depth-first?", options: ["BFS","DFS","Level-order","None"], answer: "DFS" },
+    { q: "Time complexity of binary search in sorted array?", options: ["O(n)","O(log n)","O(n log n)","O(1)"], answer: "O(log n)" },
+    { q: "Which structure uses nodes and edges?", options: ["Array","Linked list","Graph","Stack"], answer: "Graph" }
+  ],
+
+  "Algorithms": [
+    { q: "Which sorts in average O(n log n)?", options: ["Bubble sort","Insertion sort","Quick sort","Selection sort"], answer: "Quick sort" },
+    { q: "Big-O measures ?", options: ["Exact time","Asymptotic upper bound","Memory only","Debug time"], answer: "Asymptotic upper bound" },
+    { q: "Dijkstra algorithm finds ?", options: ["MST","Shortest paths from source","Sorting","Hashing"], answer: "Shortest paths from source" },
+    { q: "Dynamic programming uses ?", options: ["Greedy only","Memoization and overlapping subproblems","Recursion only","Sorting"], answer: "Memoization and overlapping subproblems" },
+    { q: "Which algorithm is divide and conquer?", options: ["Merge sort","Linear search","Bubble sort","Insertion sort"], answer: "Merge sort" },
+    { q: "Greedy algorithm picks ?", options: ["Global optimum always","Local optimum at step","Random","No choice"], answer: "Local optimum at step" },
+    { q: "Time of linear search?", options: ["O(1)","O(log n)","O(n)","O(n log n)"], answer: "O(n)" },
+    { q: "Which finds MST?", options: ["Dijkstra","Prim","Bellman-Ford","Floyd"], answer: "Prim" },
+    { q: "Topological sort applies to ?", options: ["Cyclic graphs","Directed acyclic graphs","Undirected graphs","Trees only"], answer: "Directed acyclic graphs" },
+    { q: "Backtracking used in ?", options: ["Sorting","Constraint satisfaction like Sudoku","Hashing","Compression"], answer: "Constraint satisfaction like Sudoku" }
+  ],
+
+    "Operating Systems": [
+    { q: "OS manages ?", options: ["Hardware only","Software only","Hardware & software resources","Internet"], answer: "Hardware & software resources" },
+    { q: "Process is ?", options: ["Program in execution","Source code","Compilation result","Data file"], answer: "Program in execution" },
+    { q: "Scheduler decides ?", options: ["Memory size","Which process runs next","Network speed","Printer status"], answer: "Which process runs next" },
+    { q: "Virtual memory uses ?", options: ["Registers only","Disk as extension of RAM","GPU","Printer"], answer: "Disk as extension of RAM" },
+    { q: "Deadlock means ?", options: ["Processes complete","Processes stuck waiting","Fast execution","Memory leak"], answer: "Processes stuck waiting" },
+    { q: "Semaphore is used for ?", options: ["Sorting","Synchronization","Rendering","Networking"], answer: "Synchronization" },
+    { q: "Context switch switches ?", options: ["Files","CPU from one process to another","Network","Power"], answer: "CPU from one process to another" },
+    { q: "Which is kernel mode?", options: ["User processes","OS core","Browser","Editor"], answer: "OS core" },
+    { q: "Paging avoids ?", options: ["Deadlock","Fragmentation","Compilation","Errors"], answer: "Fragmentation" },
+    { q: "Which is an OS example?", options: ["Chrome","Windows","Word","Excel"], answer: "Windows" }
+  ],
+  
+   "Database Systems": [
+    { q: "Which is relational DB?", options: ["MongoDB","MySQL","Cassandra","Redis"], answer: "MySQL" },
+    { q: "SQL stands for ?", options: ["Structured Query Language","Simple Query Language","Standard Query Language","Sequential Query Language"], answer: "Structured Query Language" },
+    { q: "Primary key must be ?", options: ["Null","Unique","Duplicate","Optional"], answer: "Unique" },
+    { q: "Normalization reduces ?", options: ["Queries","Data redundancy","Speed","Memory"], answer: "Data redundancy" },
+    { q: "JOIN combines rows from ?", options: ["Two tables","Disk files","Functions","Variables"], answer: "Two tables" },
+    { q: "ACID properties ensure ?", options: ["Security","Transaction reliability","UI design","Networking"], answer: "Transaction reliability" },
+    { q: "NoSQL databases are good for ?", options: ["Highly structured data only","Flexible schemas & scalability","Small data only","No queries"], answer: "Flexible schemas & scalability" },
+    { q: "Index speeds up ?", options: ["Insertion","Deletion","Search queries","Backup"], answer: "Search queries" },
+    { q: "Which is columnar DB?", options: ["Postgres","HBase","MySQL","SQLite"], answer: "HBase" },
+    { q: "Foreign key enforces ?", options: ["Uniqueness","Referential integrity","Indexing","Normalization"], answer: "Referential integrity" }
+  ],
+    "Software Engineering": [
+    { q: "SDLC stands for?", options: ["Software Development Life Cycle","System Dev Life Code","Software Design Life Cycle","None"], answer: "Software Development Life Cycle" },
+    { q: "Agile emphasizes ?", options: ["Documentation only","Individuals and interactions","No testing","Long planning"], answer: "Individuals and interactions" },
+    { q: "Unit testing tests ?", options: ["Whole system","Smallest components","Hardware","Network"], answer: "Smallest components" },
+    { q: "Version control example?", options: ["Git","Notepad","Excel","Photoshop"], answer: "Git" },
+    { q: "Requirement specification is ?", options: ["Coding","Design","Document describing what system should do","Deployment"], answer: "Document describing what system should do" },
+    { q: "Refactoring means ?", options: ["Adding features","Improving code structure without changing behavior","Deleting code base","Changing language"], answer: "Improving code structure without changing behavior" },
+    { q: "UML used for ?", options: ["Testing","Design modelling","Deployment","Coding"], answer: "Design modelling" },
+    { q: "Continuous Integration means ?", options: ["Integrating monthly","Frequent automated builds and tests","Manual merging only","No testing"], answer: "Frequent automated builds and tests" },
+    { q: "Software maintenance involves ?", options: ["Initial coding only","Updates, bug fixes, improvements","Hiring","Marketing"], answer: "Updates, bug fixes, improvements" },
+    { q: "Use-case describes ?", options: ["Code style","User interactions with system","Hardware","Database"], answer: "User interactions with system" }
+  ],
+   "Artificial Intelligence": [
+    { q: "AI simulates ?", options: ["Hardware","Human intelligence","Electricity","Chemistry"], answer: "Human intelligence" },
+    { q: "Supervised learning uses ?", options: ["No labels","Labeled data","Only testing","Only clustering"], answer: "Labeled data" },
+    { q: "Perceptron is basic ?", options: ["Database","Neural network unit","Sorting algorithm","OS"], answer: "Neural network unit" },
+    { q: "Which is NLP task?", options: ["Image classification","Machine translation","Signal processing","Routing"], answer: "Machine translation" },
+    { q: "Overfitting occurs when model ?", options: ["Generalizes well","Fits training data too closely","Uses little data","Is linear"], answer: "Fits training data too closely" },
+    { q: "Activation function example?", options: ["ReLU","Sum","Average","Divide"], answer: "ReLU" },
+    { q: "Reinforcement learning maximizes ?", options: ["Reward","Loss","Error","Time"], answer: "Reward" },
+    { q: "Which is unsupervised?", options: ["Classification","Clustering","Regression","Prediction"], answer: "Clustering" },
+    { q: "Backpropagation used to ?", options: ["Collect data","Train neural networks","Deploy models","Test models"], answer: "Train neural networks" },
+    { q: "Precision and recall relate to ?", options: ["Memory","Model performance","Network speed","Battery"], answer: "Model performance" }
+  ],
+
+  "Computer Science": [
+    { q: "CPU stands for?", options: ["Central Process Unit", "Central Processing Unit", "Computer Power Unit", "Core Processing Unit"], answer: "Central Processing Unit" },
+    { q: "HTML is?", options: ["Programming Language", "Markup Language", "Database", "Script"], answer: "Markup Language" },
+    { q: "First computer programmer?", options: ["Alan Turing", "Charles Babbage", "Ada Lovelace", "Bill Gates"], answer: "Ada Lovelace" },
+    { q: "Binary of 5?", options: ["101", "1001", "111", "110"], answer: "101" },
+    { q: "RAM stands for?", options: ["Random Access Memory", "Read Access Memory", "Ready Access Memory", "Run Access Memory"], answer: "Random Access Memory" },
+    { q: "JavaScript is?", options: ["Scripting Language", "Database", "Compiler", "OS"], answer: "Scripting Language" },
+    { q: "Google’s main programming language?", options: ["C++", "Python", "Java", "Go"], answer: "Go" },
+    { q: "Which is NOT an OS?", options: ["Linux", "Windows", "Android", "Oracle"], answer: "Oracle" },
+    { q: "Primary key used in?", options: ["Databases", "HTML", "CSS", "Python"], answer: "Databases" },
+    { q: "IP stands for?", options: ["Internet Protocol", "Internal Program", "Input Process", "Inside Protocol"], answer: "Internet Protocol" }
+  ],
+    "Machine Learning": [
+    { q: "Which algorithm is for classification?", options: ["Linear regression","Logistic regression","K-Means","PCA"], answer: "Logistic regression" },
+    { q: "Cross validation helps to ?", options: ["Increase features","Estimate generalization error","Reduce CPU","Increase labels"], answer: "Estimate generalization error" },
+    { q: "Feature scaling is needed for?", options: ["Decision trees only","Algorithms sensitive to scale like SVM","All algorithms equally","None"], answer: "Algorithms sensitive to scale like SVM" },
+    { q: "Dimensionality reduction example?", options: ["PCA","KNN","Naive Bayes","Linear regression"], answer: "PCA" },
+    { q: "K in KNN stands for ?", options: ["Constant","Neighbors count","Kernel","Kappa"], answer: "Neighbors count" },
+    { q: "Ensemble method example?", options: ["Decision tree","Random forest","Linear regression","K-Means"], answer: "Random forest" },
+    { q: "Loss function minimized in regression?", options: ["Cross-entropy","MSE","Entropy","Gini"], answer: "MSE" },
+    { q: "Which is unsupervised ML?", options: ["K-Means","Logistic regression","Linear regression","SVM"], answer: "K-Means" },
+    { q: "Gradient descent updates using ?", options: ["Random","Gradient of loss","Divisions only","Labels"], answer: "Gradient of loss" },
+    { q: "Bias-variance tradeoff balances ?", options: ["Speed and memory","Bias and variance","Accuracy and price","Size and time"], answer: "Bias and variance" }
+  ],
+    "Computer Networks": [
+    { q: "OSI model has how many layers?", options: ["5","6","7","8"], answer: "7" },
+    { q: "IP in TCP/IP stands for?", options: ["Internet Protocol","Internal Process","Interface Protocol","Input Protocol"], answer: "Internet Protocol" },
+    { q: "Router works on which layer?", options: ["Physical","Data Link","Network","Application"], answer: "Network" },
+    { q: "LAN stands for?", options: ["Large Area Network","Local Access Network","Local Area Network","Link Area Network"], answer: "Local Area Network" },
+    { q: "Which is transport layer protocol?", options: ["HTTP","FTP","TCP","DNS"], answer: "TCP" },
+    { q: "DNS translates ?", options: ["IP to domain","Domain to IP","Both","Neither"], answer: "Domain to IP" },
+    { q: "Which is wireless standard?", options: ["802.11","802.3","802.5","802.15"], answer: "802.11" },
+    { q: "MAC address is for ?", options: ["Network layer","Data link layer device ID","Application layer","Physical cable"], answer: "Data link layer device ID" },
+    { q: "Which top-level protocol is connectionless?", options: ["TCP","UDP","HTTP","FTP"], answer: "UDP" },
+    { q: "Subnet mask used to?", options: ["Identify network and host bits","Encrypt data","Compress packets","Route packets only"], answer: "Identify network and host bits" }
+  ],
+    "Web Development": [
+    { q: "HTML stands for ?", options: ["HyperText Markup Language","Hyper Transfer Markup Lang","HighText Machine Language","HyperText Machine Link"], answer: "HyperText Markup Language" },
+    { q: "CSS is used for ?", options: ["Structure","Styling","Database","Server"], answer: "Styling" },
+    { q: "JS runs on ?", options: ["Server only","Browser and server","Database","Only mobile"], answer: "Browser and server" },
+    { q: "Responsive design adapts to ?", options: ["Colors only","Screen sizes","Content only","None"], answer: "Screen sizes" },
+    { q: "Which HTTP method retrieves data?", options: ["GET","POST","DELETE","PUT"], answer: "GET" },
+    { q: "Which tag for link stylesheet?", options: ["<script>","<link>","<style>","<css>"], answer: "<link>" },
+    { q: "DOM stands for ?", options: ["Document Object Model","Data Object Model","Document Output Map","Dynamic Object Model"], answer: "Document Object Model" },
+    { q: "Bootstrap is a ?", options: ["Backend framework","CSS framework","Database","Language"], answer: "CSS framework" },
+    { q: "AJAX used for ?", options: ["Asynchronous requests","Synchronous only","Database only","Styling"], answer: "Asynchronous requests" },
+    { q: "Which is front-end library?", options: ["React","Django","Laravel","Flask"], answer: "React" }
+  ],
+   "Mobile App Development": [
+    { q: "Android apps mainly use which language?", options: ["Swift","Kotlin/Java","C#","PHP"], answer: "Kotlin/Java" },
+    { q: "iOS native apps use?", options: ["Kotlin","Swift/Objective-C","Java","Dart"], answer: "Swift/Objective-C" },
+    { q: "Cross-platform framework example?", options: ["React Native","Spring","Express","Rails"], answer: "React Native" },
+    { q: "APK is for which OS?", options: ["iOS","Android","Windows","Linux"], answer: "Android" },
+    { q: "Emulator used for?", options: ["Deploy to store","Simulate device on PC","Encrypt app","Design icons"], answer: "Simulate device on PC" },
+    { q: "Which is UI kit for iOS?", options: ["Material UI","UIKit","Bootstrap","Tailwind"], answer: "UIKit" },
+    { q: "Which language used with Flutter?", options: ["JavaScript","Dart","Kotlin","Swift"], answer: "Dart" },
+    { q: "Push notifications require?", options: ["Local DB only","Server support & device token","No server","Only network"], answer: "Server support & device token" },
+    { q: "App store for Android is?", options: ["App Store","Google Play Store","Windows Store","Mac App Store"], answer: "Google Play Store" },
+    { q: "Responsive mobile layout uses ?", options: ["Media queries","SQL queries","Socket calls","XML only"], answer: "Media queries" }
+  ]
+};
+
+    // Step 3: Load questions of selected subject
+ let quizData = questions[subject] || [];
+let container = document.getElementById("quizContainer");
+
+let score = 0;
+let total = quizData.length;
+let answered = 0;
+
+quizData.forEach((item, index) => {
+  let div = document.createElement("div");
+  div.className = "question-box";
+
+  // Check if it's a fill-in-the-blank type (optional)
+  if(item.type === "fill"){
+    div.innerHTML = `
+      <h3>Q${index+1}: ${item.q}</h3>
+      <input type="text" id="input${index}" placeholder="Type your answer">
+      <button onclick="checkFillAnswer(${index}, '${item.answer}')">Submit</button>
+    `;
+  } else { // multiple choice
+    div.innerHTML = `
+      <h3>Q${index+1}: ${item.q}</h3>
+      ${item.options.map(opt => 
+        `<button onclick="checkMCQ('${opt}','${item.answer}', this)">${opt}</button>`
+      ).join("")}
+    `;
+  }
+
+  container.appendChild(div);
+});
+
+// Multiple Choice Question check
+function checkMCQ(selected, correct, btn){
+  let buttons = btn.parentElement.querySelectorAll("button");
+  buttons.forEach(b => b.disabled = true);
+
+  if(selected === correct){
+    btn.style.background = "lime";
+    score++;
+  } else {
+    btn.style.background = "red";
+    buttons.forEach(b => {
+      if(b.innerText === correct) b.style.background = "lime";
+    });
+  }
+
+  answered++;
+  showResult();
+}
+
+// Fill-in-the-blank check
+function checkFillAnswer(index, correct){
+  let input = document.getElementById("input"+index);
+  let parentDiv = input.parentElement;
+  let userAns = input.value.trim();
+
+  if(userAns.toLowerCase() === correct.toLowerCase()){
+    score++;
+    input.style.border = "2px solid lime";
+  } else {
+    input.style.border = "2px solid red";
+    let correctAnswer = document.createElement("div");
+    correctAnswer.style.color = "lime";
+    correctAnswer.innerText = `Correct Answer: ${correct}`;
+    parentDiv.appendChild(correctAnswer);
+  }
+
+  // Disable input and button
+  input.disabled = true;
+  parentDiv.querySelector("button").disabled = true;
+
+  answered++;
+  showResult();
+}
+
+// Show result at the end
+
+  // Show result at the end
+  function showResult(){
+    if(answered === total){
+      // Save score & total to localStorage
+      localStorage.setItem("quizScore", score);
+      localStorage.setItem("quizTotal", total);
+
+      // Redirect to result.html
+      window.location.href = "result.html";
+    }
+  }
+
+
+
+  </script>
+</body>
+</html>
+
+
